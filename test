@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Prompt for a filename until it exists
+while :; do
+  read -p "Enter a filename: " Filename
+  [[ -f $Filename ]] && break
+  echo "File not found. Try again."
+done
+
+# Validate format: each nonempty line must have exactly 7 fields
+echo "Validating file format..."
+line=0
+while IFS= read -r content; do
+  ((line++))
+  [[ -z $content ]] && continue
+  IFS=':' read -ra fields <<< "$content"
+  if (( ${#fields[@]} != 7 )); then
+    echo "Error: Line $line has ${#fields[@]} fields (expected 7)."
+    exit 1
+  fi
+  # UID and GID must be numeric
+  [[ ! ${fields[2]} =~ ^[0-9]+$ ]] && { echo "Error: UID '${fields[2]}' on line $line."; exit 1; }
+  [[ ! ${fields[3]} =~ ^[0-9]+$ ]] && { echo "Error: GID '${fields[3]}' on line $line."; exit 1; }
+  # Home and shell (fields 5 and 6) must start with '/' if nonempty
+  [[ ${fields[5]} && ${fields[5]:0:1} != '/' ]] && { echo "Error: Home '${fields[5]}' on line $line."; exit 1; }
+  [[ ${fields[6]} && ${fields[6]:0:1} != '/' ]] && { echo "Error: Shell '${fields[6]}' on line $line."; exit 1; }
+done < "$Filename"
+echo "Format OK."
+
+# Count bash users and find highest UID
+num_user=0
+max_uid=0
+while IFS=':' read -r user _ uid _ _ _ shell; do
+  [[ $shell == /bin/bash || $shell == /bin/sh ]] && ((num_user++)) && echo " - $user"
+  (( uid>max_uid )) && max_uid=$uid
+done < "$Filename"
+echo "Users with bash shell: $num_user"
+echo "Largest UID: $max_uid"
+
+# Adjust permissions based on 'others' read bit
+perm=$(stat -c %a "$Filename")
+# Extract 'others' digit (last octal digit)
+others=${perm: -1}
+if (( others & 4 )); then
+  chown userSUSS:userSUSS "$Filename"
+  echo "Owner/group changed to userSUSS."
+else
+  chmod 764 "$Filename"
+  echo "Permissions set to 764."
+fi
