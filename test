@@ -29,15 +29,18 @@ while IFS=':' read -r username _ uid _ _ _ shell ; do
     fi
 done < "$Filename"
 
-#Count users with shell and find largest UID
+#Var for users and largest UID
 num_user=0
 large_id=0
 
+#Count users with shell and find largest UID
 while IFS=':' read -r username _ uid _ _ _ shell; do
+#Check if /bin/bash or /bin/sh
     if [[ "$shell" == "/bin/bash" || "$shell" == "/bin/sh" ]]; then
         echo -e "\n$username"
         ((num_user++))
     fi
+#Check if it a number and check if the id is larger. If larger add to the var
     if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > large_id )); then
         large_id="$uid"
     fi
