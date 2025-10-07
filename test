@@ -48,8 +48,8 @@ done < "$Filename"
 echo -e "\nNumber of user account is $num_user"
 echo -e "\nThe largest user id (UID) among all the user accounts is $large_id"
 
+#Flip the condition for Part(a) 4 first bullet point
 if [[ $(stat -c "%A" "$Filename" | cut -c8) != "r" ]]; then
-    #Flip the condition for Part(a) 4 first bullet point
     chmod 764 "$Filename"
     echo -e "\nYour permission has been flip"
 else
