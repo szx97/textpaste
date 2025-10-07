@@ -29,9 +29,9 @@ while IFS=':' read -r username _ uid _ _ _ shell ; do
     fi
 done < "$Filename"
 
-#Count users with shell and find largest UID
+#Var to calculate the user and get the highest id
 num_user=0
-large_id=0
+highest_id=0
 
 while IFS=':' read -r username _ uid _ _ _ shell; do
     if [[ "$shell" == "/bin/bash" || "$shell" == "/bin/sh" ]]; then
@@ -40,7 +40,7 @@ while IFS=':' read -r username _ uid _ _ _ shell; do
     fi
 
     if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > large_id )); then
-        large_id="$uid"
+        highest_id="$uid"
     fi
 done < "$Filename"
 
