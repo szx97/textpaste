@@ -1,0 +1,10 @@
+juggernaut:x:1001:1001::/home/juggernaut:/bin/bash
+lina:x:1002:1002::/home/lina:/bin/bash
+pudge:x:1003:1003::/home/pudge:/bin/bash
+invoker:x:1004:1004::/home/invoker:/bin/bash
+crystalmaiden:x:1005:1005::/home/crystalmaiden:/bin/bash
+axe:x:1006:1006::/home/axe:/bin/bash
+sniper:x:1007:1007::/home/sniper:/bin/bash
+phantomlancer:x:1008:1008::/home/phantomlancer:/bin/bash
+earthshaker:x:1009:1009::/home/earthshaker:/bin/bash
+tinker:x:1010:1010::/home/tinker:/bin/bash
