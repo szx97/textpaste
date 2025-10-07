@@ -29,31 +29,30 @@ while IFS=':' read -r username _ uid _ _ _ shell ; do
     fi
 done < "$Filename"
 
-#Var to calculate the user and get the highest id
+#Count users with shell and find largest UID
 num_user=0
-highest_id=0
+large_id=0
 
 while IFS=':' read -r username _ uid _ _ _ shell; do
     if [[ "$shell" == "/bin/bash" || "$shell" == "/bin/sh" ]]; then
         echo -e "\n$username"
         ((num_user++))
     fi
-
-    if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > highest_id )); then
-        highest_id="$uid"
+    if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > large_id )); then
+        large_id="$uid"
     fi
 done < "$Filename"
 
 #Print the statement
 echo -e "\nNumber of user account is $num_user"
-echo -e "\nThe largest user id (UID) among all the user accounts is $highest_id"
+echo -e "\nThe largest user id (UID) among all the user accounts is $large_id"
 
-#Flip the condition for Part(a) 4 first bullet point
 if [[ $(stat -c "%A" "$Filename" | cut -c8) != "r" ]]; then
+    #Flip the condition for Part(a) 4 first bullet point
     chmod 764 "$Filename"
     echo -e "\nYour permission has been flip"
 else
-#Change the owner and user to userSUSS
+    #Change the owner and user to userSUSS
     sudo chown userSUSS:userSUSS "$Filename"
     echo -e "\nOwner and group changed to userSUSS"
 fi
