@@ -39,7 +39,7 @@ while IFS=':' read -r username _ uid _ _ _ shell; do
         ((num_user++))
     fi
 
-    if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > large_id )); then
+    if [[ "$uid" =~ ^[0-9]+$ ]] && (( uid > highest_id )); then
         highest_id="$uid"
     fi
 done < "$Filename"
