@@ -53,7 +53,7 @@ if [[ $(stat -c "%A" "$Filename" | cut -c8) != "r" ]]; then
     chmod 764 "$Filename"
     echo -e "\nYour permission has been flip"
 else
-    #Change the owner and user to userSUSS
+#Change the owner and user to userSUSS
     sudo chown userSUSS:userSUSS "$Filename"
     echo -e "\nOwner and group changed to userSUSS"
 fi
