@@ -6,7 +6,7 @@ while true; do
     echo -e "\nEnter a filename:"
     read Filename
     #Check if able to find the file
-    if [[ -f "$Filename" ]]; then
+    if find / -type f -name "$Filename" 2>/dev/null | grep -q .; then
         break
     else
         echo "The filename does not exist"
